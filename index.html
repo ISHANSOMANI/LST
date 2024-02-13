@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Love Speed Test</title>
+  <!-- Bootstrap CSS -->
+  <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+  <style>
+    body {
+      background-color: #f8f9fa;
+    }
+    .container {
+      text-align: center;
+      margin-top: 100px;
+    }
+    h1 {
+      color: #dc3545;
+      font-size: 36px;
+    }
+    .btn-love {
+      background-color: #28a745;
+      color: #fff;
+      margin: 10px;
+      padding: 20px;
+      font-size: 18px;
+      width: 150px;
+    }
+    #timer {
+      font-size: 24px;
+      margin-top: 20px;
+    }
+    #feedback {
+      margin-top: 20px;
+      font-size: 72px;
+      font-family: 'Algerian', sans-serif;
+    }
+    #tryAgain {
+      display: block;
+      margin: 20px auto;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Love Speed Test</h1>
+    <button class="btn btn-love" onclick="startGame()">Start</button>
+    <div id="timer"></div>
+    <button class="btn btn-love" id="hug" onclick="checkLove('hug')">Hug</button>
+    <button class="btn btn-love" id="kiss" onclick="checkLove('kiss')">Kiss</button>
+    <button class="btn btn-love" id="cuddle" onclick="checkLove('cuddle')">Cuddle</button>
+    <button class="btn btn-love" id="tryAgain" style="display:none;" onclick="resetGame()">Try Again</button>
+    <div id="feedback"></div>
+  </div>
+
+  <!-- Bootstrap JS and Popper.js -->
+  <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.2/dist/umd/popper.min.js"></script>
+  <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+  <script>
+    let startTime;
+    let timer;
+
+    function startGame() {
+      document.getElementById('tryAgain').style.display = 'none';
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('timer').innerHTML = 'Get ready...';
+      setTimeout(() => {
+        startTimer();
+        highlightRandomButton();
+      }, 3000);
+    }
+
+    function startTimer() {
+      startTime = new Date().getTime();
+      timer = setInterval(updateTimer, 1000);
+    }
+
+    function updateTimer() {
+      const elapsedSeconds = Math.floor((new Date().getTime() - startTime) / 1000);
+      document.getElementById('timer').innerHTML = `Time: ${elapsedSeconds}s`;
+    }
+
+    function highlightRandomButton() {
+      const buttons = ['hug', 'kiss', 'cuddle'];
+      const randomIndex = Math.floor(Math.random() * buttons.length);
+      const randomButtonId = buttons[randomIndex];
+      document.getElementById(randomButtonId).style.backgroundColor = '#dc3545';
+      document.getElementById(randomButtonId).style.color = '#fff';
+    }
+
+    function checkLove(selectedLove) {
+      const endTime = new Date().getTime();
+      const elapsedSeconds = (endTime - startTime) / 1000;
+
+      if (document.getElementById(selectedLove).style.backgroundColor === 'rgb(220, 53, 69)') {
+        displayFeedback(elapsedSeconds);
+        clearInterval(timer);
+      } else {
+        document.getElementById('timer').innerHTML = 'Wrong button! Try Again.';
+      }
+    }
+
+    function displayFeedback(elapsedSeconds) {
+      const feedbackDiv = document.getElementById('feedback');
+      let feedbackMessage = '';
+      let feedbackColor = '';
+
+      if (elapsedSeconds < 0.9) {
+        feedbackMessage = 'UNBEATABLE!!!';
+        feedbackColor = 'violet';
+      } else if (elapsedSeconds < 1) {
+        feedbackMessage = 'MAGNIFICENT!!';
+        feedbackColor = 'red';
+      } else if (elapsedSeconds < 1.5) {
+        feedbackMessage = 'GOOD!';
+        feedbackColor = 'blue';
+      } else if (elapsedSeconds < 2) {
+        feedbackMessage = 'SLOW';
+        feedbackColor = 'yellow';
+      }
+
+      feedbackDiv.innerHTML = `<div style="color: ${feedbackColor};">${feedbackMessage}</div>`;
+      document.getElementById('tryAgain').style.display = 'block';
+    }
+
+    function resetGame() {
+      document.getElementById('timer').innerHTML = '';
+      document.getElementById('feedback').innerHTML = '';
+      document.getElementById('hug').style.backgroundColor = '#28a745';
+      document.getElementById('hug').style.color = '#fff';
+      document.getElementById('kiss').style.backgroundColor = '#28a745';
+      document.getElementById('kiss').style.color = '#fff';
+      document.getElementById('cuddle').style.backgroundColor = '#28a745';
+      document.getElementById('cuddle').style.color = '#fff';
+      startGame();
+    }
+  </script>
+</body>
+</html>
